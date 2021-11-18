@@ -4,6 +4,7 @@
 - worked on: november 17 2021
 - iso file I used: ubuntu-20.04.3-live-server-amd64.iso
 - everything was done from a windows pc using ssh (besides the install of course)
+- commands with ```# some description here``` are safe to copy/paste (# = comment)
 
 # download iso
 - https://ubuntu.com/#download
@@ -17,7 +18,9 @@
 - boot server pc with usb plugged in and select install and follow the instructions
 - not being very detailed about this step because i'm assuming you have installed linux before
 - while on the ubuntu server pc. make note of the ip address since it is needed to ssh in
-```ip a | grep -i net # helps find ip```
+```
+ip a | grep -i net # helps find ip
+```
 
 # connect to ubuntu server pc
 - from your main pc open a terminal and type: ssh username@ip_address
@@ -26,36 +29,20 @@ ssh rig1@10.0.0.237
 ```
 
 # network settings
-- if your're using wifi you might have to fuck with the internet settings
-- if the internet is working after fresh install i'd just leave it alone and skip this to save your sanity.
-
-- troubleshooting: finding device names
-```
-ip a
-```
-
-- troubleshooting: if not finding device name? might be network driver issue
-- lspci + google + good luck
-```
-lspci
-```
-
-- install network-manager
+- if you're using wifi you might have to fuck with the internet settings
+- if the internet is working after a fresh install i'd just leave it alone and skip this to save your sanity
 
 ```
-sudo apt install network-manager
+sudo apt install network-manager # install network-manager
+```
+```
+sudo nano /etc/netplan/*.yaml # open network config file to edit
+```
+```
+netplan generate && netplan apply # apply new network settings
 ```
 
-- edit your network file
-- net work file is .yaml
-- extra info = https://www.tutorialspoint.com/yaml/yaml_basics.htm
-```
-sudo nano /etc/netplan/*
-```
-- i remember reading if there are more then 1 config files in dir
-- that it will choose in filename order
-- 001xyz.yaml will be picked over 002xyz.yaml
-- example below
+example /etc/netplan/*.yaml file
 ```
   network:
     ethernets:
@@ -71,79 +58,63 @@ sudo nano /etc/netplan/*
           "your_wifi_name+keep_the_quotes":
             password: "your_wifi_password+keep_the_quotes"   
 ```
+- if there are multiple files in /etc/netplan/ the file chosen will be in filename order
+- 001xyz.yaml will be picked over 002xyz.yaml
 
-- apply network settings
+- troubleshooting
 ```
-netplan generate
-netpaln apply
+ip a # troubleshooting: find device names
+```
+```
+lspci # can't find device name? might be a network driver issue (lspci + google + good luck)
 ```
 
 # increase swap
 - skip this if you have lots of ram
-
+- i only had 2gb of ram but had 100gb ssd sitting doing nothing so i choose to increase my swap space (swap space = hard drive used as ram)
 ```
-sudo swapoff /swap.img
-sudo fallocate -l 8G /swap.img
-sudo mkswap /swap.img
-sudo swapon /swap.img
+sudo swapoff /swap.img # turn swap off
+sudo fallocate -l 8G /swap.img # change swap size to 8GB
+sudo mkswap /swap.img # mk new swap img
+sudo swapon /swap.img # turn swap back on
 ```
 
 # updates
-- update system
 ```
-sudo apt update && sudo apt upgrade && sudo reboot
-```
-
-# unlock gpu settings
-- edit grub file and save
-- update grub
-- restart pc
-
-- amdgpu.ppfeaturemask=0xfffd7fff creates /sys/class/drm/card0/device/pp_od_clk_voltage that you can use for overclocking.
-- amdgpu.ppfeaturemask=0xffffffff could also work but that higher setting can cause issues (mainly RX 470/570)
-
-```
-sudo nano /etc/default/grub
+sudo apt update && sudo apt upgrade && sudo reboot # updates system and restarts
 ```
 
-```
-GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xfffd7fff"
-```
+# amd video driver install
+- refer to this if you need extra help https://amdgpu-install.readthedocs.io/en/latest/
 
 ```
-sudo update-grub && sudo update-grub2 && sudo update-initramfs -u -k all && reboot
+wget https://repo.radeon.com/amdgpu-install/latest/ubuntu/focal/amdgpu-install-21.40.40500-1_all.deb # download install package from offical amd site
 ```
-
-# AMD video driver install
+```
+sudo apt-get install ./amdgpu*.deb && sudo apt-get update # install package and update
+```
+```
+sudo dpkg --add-architecture i386 # prevents error
+```
+```
+amdgpu-install -y --accept-eula --usecase=workstation,rocm,opencl --vulkan=pro --opencl=rocr,legacy --no-32  # installs driver and componets. grab a coffee this command may take a while
+```
+```
+sudo usermod -aG video rig1 # add user to video group (rig1 = your username)
+```
+finding link in the wget command
 - went to https://repo.radeon.com/amdgpu-install/latest/ubuntu/focal/
 - right-clicked the link (brings up menu)
-- clicked copy link 
-- then wget and paste that link
-
-```
-wget https://repo.radeon.com/amdgpu-install/latest/ubuntu/focal/amdgpu-install-21.40.40500-1_all.deb
-```
+- clicked copy link (in firefox at least)
 
 - alternative: if for some reason wget doesn't work can try to download the file on your main pc then scp file transfer over
 
 ```
-cd c:\what_ever_dir_has_the_file_in_it_probably_download_folder_thought
+cd c:\what_ever_dir_has_the_file_in_it_probably_the_download_folder_thought
 scp amd*.dep rig1@10.0.0.237:/home/rig1
 ```
 
-```
-sudo apt-get install ./amdgpu*.deb
-sudo apt-get update
-```
-
-- i used this link for help https://amdgpu-install.readthedocs.io/en/latest/
-
-
-```
-sudo dpkg --add-architecture i386
-```
-
-- prevents this errror
+- sudo dpkg --add-architecture i386 prevents the below error
 ```
 The following packages have unmet dependencies:
  amdgpu-pro-lib32 : Depends: amdgpu-lib32 (= 21.40.40500-1331380) but it is not going to be installed
@@ -152,16 +123,7 @@ The following packages have unmet dependencies:
                     Depends: libgles2-amdgpu-pro:i386 (= 21.40-1331380) but it is not installable
                     Depends: libglapi1-amdgpu-pro:i386 (= 21.40-1331380) but it is not installable
                     Depends: libgl1-amdgpu-pro-dri:i386 (= 21.40-1331380) but it is not installable
-
 ```
-
-- install drivers
-- i was using one of thoese 8 slot motherboards with a soldered in cpu and this took quite a while for the command to finish
-```
-amdgpu-install -y --accept-eula --usecase=workstation,rocm,opencl --vulkan=pro --opencl=rocr,legacy --no-32 
-```
-
-
 - trobleshooting: uninstalling
 - something go wrong? you can try starting over using this
 ```
@@ -169,17 +131,26 @@ amdgpu-uninstall
 sudo apt-get purge amdgpu-install
 ```
 
+# unlock gpu settings
+- allows overclocking
 
-- add user to video group  (rig1 is your username)
 ```
-sudo usermod -aG video rig1
+sudo nano /etc/default/grub # edit bootloader
 ```
-
-
+```
+sudo update-grub && sudo update-grub2 && sudo update-initramfs -u -k all && reboot # update grub and reboot pc
+```
+- editing /etc/default/grub (change to the text below)
+```
+GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xfffd7fff"
+```
+- extra info
+- amdgpu.ppfeaturemask=0xfffd7fff creates /sys/class/drm/card0/device/pp_od_clk_voltage that you can use for overclocking.
+- amdgpu.ppfeaturemask=0xffffffff could also work but has a higher chance to cause issues (mainly RX 470/570)
 
 
 # installing mining software
-- find and copy the download link of the miner (usualy found on github)
+- find and copy the download link of the miner (usually found on github)
 - use the wget command to download shit in linux terminal
 - then use the tar command to extract the shit that was downloaded
 - here is an example for nbminer
@@ -188,10 +159,7 @@ sudo usermod -aG video rig1
 wget https://github.com/NebuTech/NBMiner/releases/download/v39.7/NBMiner_39.7_Linux.tgz
 tar -xf NBMiner*.tgz
 ls # if you want to see if it was extracted properly
-cd NB # then press tab to auto complete becasue you are way to lazy to type out the whole name every time
+cd NB # then press tab to auto-complete because you are way to lazy to type out the whole name every time
 nano start_ergo.sh # to edit your info
 ./start_ergo.sh # to start mining
 ```
-
-
-
