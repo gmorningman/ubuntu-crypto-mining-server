@@ -1,0 +1,1 @@
+# ubuntu-crypto-mining-server
