@@ -1,25 +1,23 @@
 # info
-- had a rough time installing AMD linux drives so I wrote this document for my future reference and to possibly help others.
+- had a rough time installing amd gpu drivers on linux ubuntu server. so i detailed the process for my future reference and to possibly help others
 - used for: ubuntu server crypto mining rig
 - worked on: november 17 2021
-- iso file i used: ubuntu-20.04.3-live-server-amd64.iso
-- after install I did everything via ssh
+- iso file I used: ubuntu-20.04.3-live-server-amd64.iso
+- everything was done from a windows pc using ssh (besides the install of course)
 
-# download
+# download iso
 - https://ubuntu.com/#download
 - find ubtuntu server (LTS version: long term support)
 
-# burn linux iso from windows to usb
+# burn linux iso to usb drive
 - download https://rufus.ie/en/
 - use rufus to burn .iso
 
 # installing ubuntu server
-- put usb in server pc, boot up and select install and follow the instuctions
-- im assuming you have installed linux before so im very little detail here
-- while on the ubuntu server pc. get the ip address. its required for ssh login
-```
-ip a | grep -i net
-```
+- boot server pc with usb plugged in and select install and follow the instructions
+- not being very detailed about this step because i'm assuming you have installed linux before
+- while on the ubuntu server pc. make note of the ip address since it is needed to ssh in
+```ip a | grep -i net # helps find ip```
 
 # connect to ubuntu server pc
 - from your main pc open a terminal and type: ssh username@ip_address
@@ -27,7 +25,8 @@ ip a | grep -i net
 ssh rig1@10.0.0.237
 ```
 
-# might have to fuck with internet settings if using wifi
+# network settings
+- if your're using wifi you might have to fuck with the internet settings
 - if the internet is working after fresh install i'd just leave it alone and skip this to save your sanity.
 
 - troubleshooting: finding device names
