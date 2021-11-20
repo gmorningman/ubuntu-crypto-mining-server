@@ -146,3 +146,6 @@ cd NB # then press tab to auto-complete because you are way to lazy to type out 
 nano start_ergo.sh # to edit your info
 ./start_ergo.sh # to start mining
 ```
+
+# amd overclock settings
+- https://github.com/gmorningman/ubuntu-crypto-mining-server/blob/main/amd%20overclock.Md
