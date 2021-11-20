@@ -159,7 +159,9 @@ chmod 777 oc_script # allows script to be executable
 sudo ./oc_script # start the script
 ```
 - note you can also add ```view``` at the end of ```./oc_script``` to print some info
-```sudo ./oc_script view```
+```
+sudo ./oc_script view
+```
 - next block is the script text to copy
 ```
 #!/bin/bash
