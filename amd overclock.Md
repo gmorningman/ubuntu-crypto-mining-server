@@ -81,9 +81,9 @@ echo 1 > /sys/class/drm/card1/device/hwmon/hwmon1/pwm1_enable
 echo 220 > /sys/class/drm/card1/device/hwmon/hwmon1/pwm1
 ```
 
-- https://www.kernel.org/doc/html/latest/gpu/amdgpu.html#gpu-sysfs-power-state-interfaces
+- https://www.kernel.org/doc/html/latest/gpu/amdgpu.html
 - https://www.kernel.org/doc/html/v5.10/gpu/amdgpu.html
-- refer to these kernel docs if needed
+- refer to these kernel docs for extra info
 - these doc's say the below
 ```
 < For Vega10 and previous ASICs >
