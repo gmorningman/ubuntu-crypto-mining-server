@@ -260,5 +260,5 @@ echo $compute_mode > /sys/class/drm/card$card_number/device/pp_power_profile_mod
 ```
 
 # random
-- sometimes i find i have to run oc after i start miner?
+- sometimes i find i have to run oc after i start mining to apply the fan and memory clock?
 - idk why, does any one else?
