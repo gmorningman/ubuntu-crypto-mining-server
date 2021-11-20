@@ -131,23 +131,6 @@ amdgpu-uninstall
 sudo apt-get purge amdgpu-install
 ```
 
-# unlock gpu settings
-- allows overclocking
-
-```
-sudo nano /etc/default/grub # edit bootloader
-```
-```
-sudo update-grub && sudo update-grub2 && sudo update-initramfs -u -k all && reboot # update grub and reboot pc
-```
-- editing /etc/default/grub (change to the text below)
-```
-GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xfffd7fff"
-```
-- extra info
-- amdgpu.ppfeaturemask=0xfffd7fff creates /sys/class/drm/card0/device/pp_od_clk_voltage that you can use for overclocking.
-- amdgpu.ppfeaturemask=0xffffffff could also work but has a higher chance to cause issues (mainly RX 470/570)
-
 
 # installing mining software
 - find and copy the download link of the miner (usually found on github)
