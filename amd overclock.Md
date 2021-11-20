@@ -1,3 +1,5 @@
+# info
+- spent the day figuring out amd overclocks this is what i came up with
 
 # unlock gpu settings
 - allows overclocking
@@ -256,3 +258,7 @@ cat /sys/class/drm/card$card_number/device/hwmon/hwmon$card_number/pwm1
 echo "--- set compute mode ---"
 echo $compute_mode > /sys/class/drm/card$card_number/device/pp_power_profile_mode
 ```
+
+# random
+- sometimes i find i have to run oc after i start miner?
+- idk why, does any one else?
