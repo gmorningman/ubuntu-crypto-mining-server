@@ -144,7 +144,7 @@ sudo lshw -class display
 ```
 
 # simple script to set settings
-- might be useful, might not (would have to change for multiple gpus)
+- very simple script you can use or modify to suit your needs.
 ```
 nano oc_script
 ```
@@ -162,7 +162,7 @@ sudo ./oc_script # start the script
 ```
 sudo ./oc_script view
 ```
-- next block is the script text to copy
+- next block is the script text to copy and paste into nano
 ```
 #!/bin/bash
 
@@ -171,7 +171,7 @@ sudo ./oc_script view
     # correct card number try - ls /sys/class/drm/
     card_number=1
 
-    # clock clock values to use
+    # core clock values to use
     core_clockMHz=1150
     core_clockmV=890
 
@@ -187,6 +187,7 @@ sudo ./oc_script view
 
     # compute mode value
     compute_mode=5
+    
 ########## end variables to edit ##########
 
 # prints a menu of info if you type view after this script name
